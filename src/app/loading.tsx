@@ -1,0 +1,1 @@
+export default function Loading(){return <div className="container-shell py-32 text-center text-sm font-semibold text-slate-400">Loading BrightPath…</div>}

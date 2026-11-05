@@ -1,0 +1,11 @@
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { getSupabase } from "@/lib/supabase";
+import { GraduationCap, LoaderCircle } from "lucide-react";
+export default function AdminLogin(){
+ const [email,setEmail]=useState("");const [password,setPassword]=useState("");const [error,setError]=useState("");const [busy,setBusy]=useState(false);const router=useRouter();
+ async function login(e:React.FormEvent){e.preventDefault();setBusy(true);setError("");try{const {error}=await getSupabase().auth.signInWithPassword({email,password});if(error)throw error;router.push("/admin");router.refresh();}catch{setError("Sign-in failed. Check your email and password, then try again.");}finally{setBusy(false);}}
+ return <div className="container-shell grid min-h-[70vh] place-items-center py-14"><form onSubmit={login} className="w-full max-w-md rounded-[28px] border border-slate-100 bg-white p-8 shadow-soft"><Link href="/" className="flex items-center gap-3"><span className="grid h-11 w-11 place-items-center rounded-2xl bg-navy text-white"><GraduationCap/></span><strong className="text-xl text-ink">BrightPath <span className="font-medium text-slate-400">Staff</span></strong></Link><h1 className="mt-9 text-3xl font-extrabold text-ink">Welcome back.</h1><p className="mt-2 text-sm text-slate-500">Sign in to manage courses and parent enquiries.</p><label className="field-label mt-7 block">Email address<input required type="email" value={email} onChange={e=>setEmail(e.target.value)} className="field-control" placeholder="staff@example.com"/></label><label className="field-label mt-5 block">Password<input required type="password" value={password} onChange={e=>setPassword(e.target.value)} className="field-control" placeholder="Your password"/></label>{error&&<p className="mt-4 text-sm text-red-600">{error}</p>}<button disabled={busy} className="mt-7 flex w-full items-center justify-center gap-2 rounded-full bg-teal px-5 py-4 font-bold text-white disabled:opacity-60">{busy?<LoaderCircle className="animate-spin"/>:"Sign in"}</button><p className="mt-5 text-center text-xs text-slate-400">Admin accounts are created securely in Supabase Authentication.</p></form></div>;
+}
